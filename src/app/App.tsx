@@ -35,7 +35,7 @@ const floors: Floor[] = [
     label: "Second Floor",
     units: [
       { type: "1BHK", status: "vacant", rent: "₹12,000" },
-      { type: "2BHK", status: "vacant", rent: "₹20,000" },
+      { type: "2BHK", status: "vacating", rent: "₹20,000" },
     ],
   },
   {
@@ -227,7 +227,7 @@ export default function App() {
     <div className="min-h-screen bg-background text-foreground" style={{ fontFamily: '"DM Sans", system-ui, sans-serif' }}>
 
       {/* ── NAV ── */}
-      <nav className={`fixed top-0 inset-x-0 z-50 pt-2 transition-colors duration-300 ${menuOpen ? "bg-white shadow-md" : ""}`}>
+      <nav className={`fixed top-0 inset-x-0 z-50 pt-2 transition-colors duration-300 ${menuOpen ? "bg-white/60 backdrop-blur-2xl shadow-lg border-b border-white/20" : ""}`}>
         {/* Blurry Frosted Glass Background Layer with Gradient Fade */}
         <div 
           className={`absolute top-0 inset-x-0 h-[88px] bg-white/20 backdrop-blur-md pointer-events-none transition-opacity duration-300 ${menuOpen ? "opacity-0" : "opacity-100"}`}
@@ -263,7 +263,7 @@ export default function App() {
           </button>
         </div>
         {menuOpen && (
-          <div className="md:hidden bg-white border-t border-border px-4 pb-4 pt-2 flex flex-col gap-1">
+          <div className="md:hidden border-t border-border/50 px-4 pb-4 pt-2 flex flex-col gap-1">
             {[["#availability", "Availability"], ["#gallery", "Gallery"], ["#terms", "Rent Terms"], ["#reviews", "Reviews"], ["#location", "Location"], ["#contact", "Contact"]].map(([href, label]) => {
               const isActive = activeSection === href.replace("#", "");
               return (
@@ -281,9 +281,8 @@ export default function App() {
         )}
       </nav>
 
-      <div className="flex flex-col min-h-[100svh]">
-        {/* ── HERO ── */}
-        <section id="top" className="relative flex-1 flex items-end overflow-hidden" style={{ paddingTop: 56, minHeight: 400 }}>
+      {/* ── HERO ── */}
+      <section id="top" className="relative min-h-[100svh] flex items-end overflow-hidden" style={{ paddingTop: 56 }}>
         <img
           src="https://images.unsplash.com/photo-1779976955613-b74623824d1c?w=1600&h=900&fit=crop&auto=format"
           alt="Bharathi Residency — residential apartments for rent in Electronic City Phase 2 Bengaluru"
@@ -326,7 +325,6 @@ export default function App() {
           ))}
         </div>
       </section>
-      </div>
 
 
       {/* ── AVAILABILITY ── */}
