@@ -208,15 +208,15 @@ export default function App() {
         )}
       </nav>
 
-      {/* ── HERO — compact so amenities are visible without scrolling ── */}
-      <section id="top" className="relative flex items-end overflow-hidden" style={{ height: "58vh", minHeight: 380, paddingTop: 56 }}>
+      {/* ── HERO — full screen height ── */}
+      <section id="top" className="relative flex items-end overflow-hidden" style={{ height: "100vh", minHeight: 600, paddingTop: 56 }}>
         <img
           src="https://images.unsplash.com/photo-1779976955613-b74623824d1c?w=1600&h=900&fit=crop&auto=format"
           alt="Bharathi Residency — residential apartments for rent in Electronic City Phase 2 Bengaluru"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 pb-8 md:pb-10">
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 pb-16 md:pb-24">
           <p className="text-amber-400 text-[10px] font-bold tracking-[0.2em] uppercase mb-2">
             Electronic City Phase 2 · Bengaluru
           </p>
@@ -253,26 +253,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── RENT PRICING BANNER ── */}
-      <section className="bg-amber-50 border-y border-amber-200 py-5">
-        <div className="max-w-6xl mx-auto px-4 flex flex-wrap items-center justify-center gap-6 md:gap-16 text-center">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-amber-700 mb-0.5">1BHK Monthly Rent</p>
-            <p className="font-display text-3xl font-bold text-foreground">₹12,000</p>
-            <p className="text-xs text-muted-foreground mt-0.5">+ electricity & water bill (direct to dept.)</p>
-          </div>
-          <div className="w-px h-10 bg-amber-200 hidden md:block" />
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-amber-700 mb-0.5">2BHK Monthly Rent</p>
-            <p className="font-display text-3xl font-bold text-foreground">₹20,000</p>
-            <p className="text-xs text-muted-foreground mt-0.5">+ electricity & water bill (direct to dept.)</p>
-          </div>
-          <a href="#availability"
-            className="bg-primary text-white font-bold px-6 py-2.5 rounded-full text-sm hover:bg-primary/90 transition-colors">
-            See Availability →
-          </a>
-        </div>
-      </section>
 
       {/* ── AVAILABILITY ── */}
       <section id="availability" className="py-14 md:py-20 bg-background scroll-mt-14">
