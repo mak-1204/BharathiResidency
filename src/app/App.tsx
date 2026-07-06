@@ -79,22 +79,28 @@ const amenities = [
 
 const reviews = [
   {
-    name: "Priya S.",
+    name: "Akshay Kumar",
     rating: 5,
-    text: "Great place to stay. The owners Murali and Akshay are very responsive and genuinely helpful. Water supply has never been an issue — the borewell backup is a real lifesaver in E City. Ideal for IT folks.",
-    since: "Tenant, 2023",
+    text: "Good House. I have never seen a house with this good ventilation. And the Vastu is perfect a East facing house, with Kitchen in South east, bedroom in south west and north west and pooja room facing each.",
+    since: "3 hours ago",
   },
   {
-    name: "Karthik R.",
+    name: "Aditya Yenugu",
     rating: 5,
-    text: "Stayed here for over 2 years. Semi-furnished, clean building, lift works reliably. The rent is very fair for Electronic City Phase 2. Best part — zero broker, direct owner contact makes everything smooth and transparent.",
-    since: "Tenant, 2022–2024",
+    text: "Good well maintained and well ventilated House",
+    since: "3 weeks ago",
   },
   {
-    name: "Sunitha M.",
+    name: "Nishanka Nayak",
     rating: 5,
-    text: "Quiet, well-maintained building. Owners address maintenance issues within the day. Good water supply, nice common areas. Perfect for working professionals who want a hassle-free rental experience.",
-    since: "Tenant, 2024",
+    text: "Nice and kind owner, nice house overall.",
+    since: "3 weeks ago",
+  },
+  {
+    name: "Shubham ugalmugale",
+    rating: 5,
+    text: "The design and overall functionality of the building are highly impressive. The layout maximizes natural light beautifully, creating an inviting and productive environment.",
+    since: "3 weeks ago",
   },
 ];
 
@@ -198,7 +204,7 @@ export default function App() {
     const msg = encodeURIComponent(
       `New Rental Enquiry — Bharathi Residency\nName: ${form.name}\nPhone: ${form.phone}\nUnit: ${form.unit}\nMove-in: ${form.timing}`
     );
-    window.open(`https://wa.me/919790377717?text=${msg}`, "_blank");
+    window.open(`https://wa.me/919994400311?text=${msg}`, "_blank");
     setSubmitted(true);
     setTimeout(closePopup, 2200);
   };
@@ -221,10 +227,10 @@ export default function App() {
     <div className="min-h-screen bg-background text-foreground" style={{ fontFamily: '"DM Sans", system-ui, sans-serif' }}>
 
       {/* ── NAV ── */}
-      <nav className="fixed top-0 inset-x-0 z-50 pt-2">
+      <nav className={`fixed top-0 inset-x-0 z-50 pt-2 transition-colors duration-300 ${menuOpen ? "bg-white shadow-md" : ""}`}>
         {/* Blurry Frosted Glass Background Layer with Gradient Fade */}
         <div 
-          className="absolute inset-0 bg-white/20 backdrop-blur-md"
+          className={`absolute top-0 inset-x-0 h-[88px] bg-white/20 backdrop-blur-md pointer-events-none transition-opacity duration-300 ${menuOpen ? "opacity-0" : "opacity-100"}`}
           style={{ maskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)' }}
         />
         
@@ -246,7 +252,7 @@ export default function App() {
             })}
           </div>
           <a
-            href={`https://wa.me/919790377717?text=${WA_MSG}`}
+            href={`https://wa.me/919994400311?text=${WA_MSG}`}
             target="_blank" rel="noreferrer"
             className="hidden md:inline-flex items-center gap-1.5 bg-primary text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-primary/90 transition-colors shrink-0 shadow-md hover:shadow-lg"
           >
@@ -267,7 +273,7 @@ export default function App() {
                 </a>
               );
             })}
-            <a href={`https://wa.me/919790377717?text=${WA_MSG}`} target="_blank" rel="noreferrer"
+            <a href={`https://wa.me/919994400311?text=${WA_MSG}`} target="_blank" rel="noreferrer"
               className="mt-2 flex items-center justify-center gap-2 bg-green-600 text-white font-semibold py-3 rounded-xl text-sm">
               <MessageCircle size={16} /> WhatsApp Now
             </a>
@@ -300,7 +306,7 @@ export default function App() {
               className="bg-amber-500 hover:bg-amber-400 text-white font-bold px-5 py-2.5 rounded-full text-sm transition-colors shadow-lg">
               Check Vacancy Now
             </a>
-            <a href={`https://wa.me/919790377717?text=${WA_MSG}`} target="_blank" rel="noreferrer"
+            <a href={`https://wa.me/919994400311?text=${WA_MSG}`} target="_blank" rel="noreferrer"
               className="bg-white/15 hover:bg-white/25 border border-white/40 text-white font-bold px-5 py-2.5 rounded-full text-sm transition-colors backdrop-blur-sm">
               WhatsApp Us
             </a>
@@ -309,13 +315,13 @@ export default function App() {
       </section>
 
       {/* ── AMENITIES STRIP ── */}
-      <section className="bg-primary text-white py-6">
-        <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-6">
+      <section className="bg-primary text-white py-8 md:py-10">
+        <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 md:gap-6">
           {amenities.map((a) => (
-            <div key={a.label} className="flex flex-col items-center text-center gap-1">
-              <span className="text-xl md:text-2xl">{a.icon}</span>
-              <span className="font-bold text-[11px] sm:text-xs">{a.label}</span>
-              <span className="text-[9px] sm:text-[10px] text-white/60 leading-snug hidden sm:block">{a.detail}</span>
+            <div key={a.label} className="flex flex-col items-center text-center gap-2">
+              <span className="text-3xl md:text-4xl mb-1">{a.icon}</span>
+              <span className="font-bold text-sm">{a.label}</span>
+              <span className="text-[11px] text-white/70 leading-snug hidden sm:block">{a.detail}</span>
             </div>
           ))}
         </div>
@@ -383,7 +389,7 @@ export default function App() {
                         </td>
                         <td className="py-4 px-4">
                           {unit.status !== "occupied" && (
-                            <a href={`https://wa.me/919790377717?text=${encodeURIComponent(`Hi, I want to rent the ${unit.type} on ${floor.label} at Bharathi Residency. Is it available?`)}`}
+                            <a href={`https://wa.me/919994400311?text=${encodeURIComponent(`Hi, I want to rent the ${unit.type} on ${floor.label} at Bharathi Residency. Is it available?`)}`}
                               target="_blank" rel="noreferrer"
                               className="text-xs font-semibold text-primary hover:underline whitespace-nowrap">
                               Enquire →
@@ -425,7 +431,7 @@ export default function App() {
                                 <span className="font-semibold">{unit.rent}</span><span className="text-muted-foreground">/mo {unit.type !== "Shop" && "+ Bills"}</span>
                               </div>
                             </div>
-                            <a href={`https://wa.me/919790377717?text=${encodeURIComponent(`Hi, I want to rent the ${unit.type} on ${floor.label} at Bharathi Residency. Is it available?`)}`}
+                            <a href={`https://wa.me/919994400311?text=${encodeURIComponent(`Hi, I want to rent the ${unit.type} on ${floor.label} at Bharathi Residency. Is it available?`)}`}
                               target="_blank" rel="noreferrer"
                               className="text-xs font-bold text-green-600 underline">
                               Chat Now
@@ -481,7 +487,7 @@ export default function App() {
           </div>
           <p className="text-center text-sm text-muted-foreground mt-4">
             More photos of kitchen, bathroom & common areas —{" "}
-            <a href={`https://wa.me/919790377717?text=${WA_MSG}`} target="_blank" rel="noreferrer" className="text-primary font-semibold underline">
+            <a href={`https://wa.me/919994400311?text=${WA_MSG}`} target="_blank" rel="noreferrer" className="text-primary font-semibold underline">
               request on WhatsApp
             </a>
           </p>
@@ -720,7 +726,7 @@ export default function App() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="bg-foreground text-background/50 py-8 px-4 mb-[4.5rem] md:mb-0">
+      <footer className="bg-foreground text-background/50 py-8 px-4">
         <div className="max-w-6xl mx-auto flex flex-col items-center gap-3 text-xs">
           <div className="flex items-center gap-2 mb-1">
             <img src="/image.png" alt="Bharathi Residency Logo" className="w-8 h-8 object-contain bg-white rounded-full p-1 opacity-90" />
@@ -734,25 +740,13 @@ export default function App() {
         </div>
       </footer>
 
-      {/* ── STICKY MOBILE BAR ── */}
-      <div className="fixed bottom-0 inset-x-0 z-40 md:hidden bg-white border-t border-border flex shadow-lg"
-        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
-        <a href="tel:+919790377717"
-          className="flex-1 flex flex-col items-center justify-center py-3 gap-0.5 text-primary font-bold text-[11px] active:bg-muted">
-          <Phone size={20} /> Call Now
-        </a>
-        <div className="w-px bg-border" />
-        <a href={`https://wa.me/919790377717?text=${WA_MSG}`} target="_blank" rel="noreferrer"
-          className="flex-1 flex flex-col items-center justify-center py-3 gap-0.5 text-green-600 font-bold text-[11px] active:bg-muted">
-          <MessageCircle size={20} /> WhatsApp
-        </a>
-        <div className="w-px bg-border" />
-        <a href="#availability"
-          className="flex-1 flex flex-col items-center justify-center py-3 gap-0.5 text-amber-600 font-bold text-[11px] active:bg-muted">
-          <Home size={20} /> Availability
-        </a>
-      </div>
-      <div className="h-16 md:hidden" />
+      {/* ── FLOATING PHONE ICON (MOBILE) ── */}
+      <a 
+        href="tel:+919994400311"
+        className="fixed bottom-6 right-5 z-40 md:hidden bg-primary text-white p-3.5 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.3)] hover:scale-105 active:scale-95 transition-transform"
+      >
+        <Phone size={26} />
+      </a>
 
       {/* ── ENQUIRY POPUP ── */}
       {popupOpen && (
@@ -775,7 +769,7 @@ export default function App() {
               <div className="px-6 py-10 text-center">
                 <div className="text-5xl mb-3">✅</div>
                 <p className="font-bold text-lg mb-1">Sent!</p>
-                <p className="text-muted-foreground text-sm">Opening WhatsApp — Murali will reply shortly.</p>
+                <p className="text-muted-foreground text-sm">Opening WhatsApp — Akshay will reply shortly.</p>
               </div>
             ) : (
               <form onSubmit={handleEnquiry} className="px-6 py-5 space-y-3">
