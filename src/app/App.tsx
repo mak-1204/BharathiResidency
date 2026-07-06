@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Phone, MessageCircle, MapPin, ChevronDown, X, Menu, Home, Star } from "lucide-react";
+import { Phone, MessageCircle, MapPin, ChevronDown, X, Menu, Home, Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type UnitStatus = "vacant" | "occupied" | "vacating";
@@ -21,34 +21,34 @@ const floors: Floor[] = [
     label: "Ground Floor",
     units: [
       { type: "2BHK", status: "occupied", rent: "₹20,000" },
-      { type: "Shop", status: "vacant", rent: "₹8,000" },
+      { type: "Shop", status: "occupied", rent: "₹8,000" },
     ],
   },
   {
     label: "First Floor",
     units: [
       { type: "1BHK", status: "occupied", rent: "₹12,000" },
-      { type: "2BHK", status: "vacant", rent: "₹20,000" },
+      { type: "2BHK", status: "occupied", rent: "₹20,000" },
     ],
   },
   {
     label: "Second Floor",
     units: [
-      { type: "1BHK", status: "occupied", rent: "₹12,000" },
-      { type: "2BHK", status: "vacating", rent: "₹20,000" },
+      { type: "1BHK", status: "vacant", rent: "₹12,000" },
+      { type: "2BHK", status: "vacant", rent: "₹20,000" },
     ],
   },
   {
     label: "Third Floor",
     units: [
-      { type: "1BHK", status: "vacant", rent: "₹12,000" },
+      { type: "1BHK", status: "occupied", rent: "₹12,000" },
       { type: "2BHK", status: "occupied", rent: "₹20,000" },
     ],
   },
   {
     label: "Fourth Floor",
     units: [
-      { type: "1BHK", status: "vacant", rent: "₹12,000" },
+      { type: "1BHK", status: "occupied", rent: "₹12,000" },
     ],
   },
 ];
@@ -125,6 +125,15 @@ const faqs = [
   },
 ];
 
+const galleryImages = [
+  { src: "/furnished_living_room.png", alt: "Fully furnished living room with TV and sofa — Bharathi Residency" },
+  { src: "/furnished_bedroom.png", alt: "Cozy furnished bedroom — Bharathi Residency" },
+  { src: "/furnished_kitchen_6.png", alt: "Modern equipped kitchen with fridge — Bharathi Residency" },
+  { src: "/furnished_entrance.png", alt: "Premium corridor entrance — Bharathi Residency" },
+  { src: "/enhanced_8.png", alt: "Modern studio bathroom — Bharathi Residency" },
+  { src: "/furnished_bedroom_17.png", alt: "Second cozy furnished bedroom — Bharathi Residency" },
+];
+
 const owners = [
   { name: "Murali Babu", phone: "9790377717", waNum: "919790377717" },
   { name: "Akshay Kumar M", phone: "9994400311", waNum: "919994400311" },
@@ -145,6 +154,33 @@ export default function App() {
   const [popupOpen, setPopupOpen] = useState(false);
   const [form, setForm] = useState({ name: "", phone: "", unit: "", timing: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (popupOpen || lightboxIndex !== null || menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [popupOpen, lightboxIndex, menuOpen]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) setActiveSection(entry.target.id);
+      });
+    }, { rootMargin: "-20% 0px -70% 0px" });
+    
+    ["availability", "gallery", "terms", "reviews", "location", "contact"].forEach(s => {
+      const el = document.getElementById(s);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (sessionStorage.getItem("br_popup")) return;
@@ -166,40 +202,71 @@ export default function App() {
     setSubmitted(true);
     setTimeout(closePopup, 2200);
   };
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace("#", "");
+    if (targetId === "top") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      const target = document.getElementById(targetId);
+      if (target) {
+        const top = target.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    }
+    setMenuOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground" style={{ fontFamily: '"DM Sans", system-ui, sans-serif' }}>
 
       {/* ── NAV ── */}
-      <nav className="fixed top-0 inset-x-0 z-50 bg-white/96 backdrop-blur-md border-b border-border shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
-          <a href="#top" className="font-display text-[1.05rem] font-bold text-primary shrink-0">
+      <nav className="fixed top-0 inset-x-0 z-50 pt-2">
+        {/* Blurry Frosted Glass Background Layer with Gradient Fade */}
+        <div 
+          className="absolute inset-0 bg-white/20 backdrop-blur-md"
+          style={{ maskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 50%, transparent 100%)' }}
+        />
+        
+        {/* Content Layer */}
+        <div className="relative max-w-6xl mx-auto px-4 h-20 flex items-center justify-between gap-4">
+          <a href="#top" onClick={(e) => handleNavClick(e, "#top")} className="flex items-center gap-3 font-display text-xl md:text-2xl font-bold text-primary shrink-0">
+            <img src="/image.png" alt="Bharathi Residency Logo" className="w-10 h-10 md:w-12 md:h-12 object-contain rounded-lg" />
             Bharathi Residency
           </a>
-          <div className="hidden md:flex items-center gap-5 text-sm font-semibold text-foreground/70">
-            {[["#availability", "Availability"], ["#gallery", "Gallery"], ["#terms", "Rent Terms"], ["#reviews", "Reviews"], ["#location", "Location"], ["#contact", "Contact"]].map(([href, label]) => (
-              <a key={href} href={href} className="hover:text-primary transition-colors">{label}</a>
-            ))}
+          <div className="hidden md:flex items-center gap-6 text-sm font-semibold text-foreground/80">
+            {[["#availability", "Availability"], ["#gallery", "Gallery"], ["#terms", "Rent Terms"], ["#reviews", "Reviews"], ["#location", "Location"], ["#contact", "Contact"]].map(([href, label]) => {
+              const isActive = activeSection === href.replace("#", "");
+              return (
+                <a key={href} href={href} onClick={(e) => handleNavClick(e, href)} className={`group relative py-1 hover:text-primary transition-colors ${isActive ? "text-primary" : ""}`}>
+                  {label}
+                  <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[3px] bg-primary transition-all duration-300 rounded-full ${isActive ? "w-full opacity-100" : "w-0 opacity-0 group-hover:w-full group-hover:opacity-40"}`} />
+                </a>
+              );
+            })}
           </div>
           <a
             href={`https://wa.me/919790377717?text=${WA_MSG}`}
             target="_blank" rel="noreferrer"
-            className="hidden md:inline-flex items-center gap-1.5 bg-primary text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-primary/90 transition-colors shrink-0"
+            className="hidden md:inline-flex items-center gap-1.5 bg-primary text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-primary/90 transition-colors shrink-0 shadow-md hover:shadow-lg"
           >
-            <MessageCircle size={14} /> WhatsApp
+            <MessageCircle size={15} /> WhatsApp
           </a>
           <button className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors" onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <X size={20} /> : <Menu size={20} />}
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
         {menuOpen && (
           <div className="md:hidden bg-white border-t border-border px-4 pb-4 pt-2 flex flex-col gap-1">
-            {[["#availability", "Availability"], ["#gallery", "Gallery"], ["#terms", "Rent Terms"], ["#reviews", "Reviews"], ["#location", "Location"], ["#contact", "Contact"]].map(([href, label]) => (
-              <a key={href} href={href} onClick={() => setMenuOpen(false)}
-                className="py-2.5 px-2 font-semibold text-sm rounded-lg hover:bg-muted transition-colors">
-                {label}
-              </a>
-            ))}
+            {[["#availability", "Availability"], ["#gallery", "Gallery"], ["#terms", "Rent Terms"], ["#reviews", "Reviews"], ["#location", "Location"], ["#contact", "Contact"]].map(([href, label]) => {
+              const isActive = activeSection === href.replace("#", "");
+              return (
+                <a key={href} href={href} onClick={(e) => handleNavClick(e, href)}
+                  className={`py-2.5 px-3 font-semibold text-sm rounded-lg transition-colors ${isActive ? "bg-primary/10 text-primary" : "hover:bg-muted"}`}>
+                  {label}
+                </a>
+              );
+            })}
             <a href={`https://wa.me/919790377717?text=${WA_MSG}`} target="_blank" rel="noreferrer"
               className="mt-2 flex items-center justify-center gap-2 bg-green-600 text-white font-semibold py-3 rounded-xl text-sm">
               <MessageCircle size={16} /> WhatsApp Now
@@ -208,8 +275,9 @@ export default function App() {
         )}
       </nav>
 
-      {/* ── HERO — full screen height ── */}
-      <section id="top" className="relative flex items-end overflow-hidden" style={{ height: "100vh", minHeight: 600, paddingTop: 56 }}>
+      <div className="flex flex-col min-h-[100svh]">
+        {/* ── HERO ── */}
+        <section id="top" className="relative flex-1 flex items-end overflow-hidden" style={{ paddingTop: 56, minHeight: 400 }}>
         <img
           src="https://images.unsplash.com/photo-1779976955613-b74623824d1c?w=1600&h=900&fit=crop&auto=format"
           alt="Bharathi Residency — residential apartments for rent in Electronic City Phase 2 Bengaluru"
@@ -240,9 +308,9 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── AMENITIES STRIP — visible in first screen ── */}
+      {/* ── AMENITIES STRIP ── */}
       <section className="bg-primary text-white py-6">
-        <div className="max-w-6xl mx-auto px-4 grid grid-cols-3 sm:grid-cols-6 gap-3 md:gap-6">
+        <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 md:gap-6">
           {amenities.map((a) => (
             <div key={a.label} className="flex flex-col items-center text-center gap-1">
               <span className="text-xl md:text-2xl">{a.icon}</span>
@@ -252,6 +320,7 @@ export default function App() {
           ))}
         </div>
       </section>
+      </div>
 
 
       {/* ── AVAILABILITY ── */}
@@ -280,7 +349,7 @@ export default function App() {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-muted border-b border-border">
-                  {["Floor", "Unit", "Status", "Monthly Rent", "Bills", ""].map((h) => (
+                  {["Floor", "Unit", "Status", "Deposit", "Rent", "Bills", ""].map((h) => (
                     <th key={h} className="text-left py-3 px-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">{h}</th>
                   ))}
                 </tr>
@@ -302,6 +371,9 @@ export default function App() {
                             <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
                             {s.label}
                           </span>
+                        </td>
+                        <td className="py-4 px-4 font-semibold text-foreground text-sm">
+                          {unit.status !== "occupied" ? (unit.type === "2BHK" ? "₹60,000" : unit.type === "1BHK" ? "₹30,000" : "—") : <span className="text-muted-foreground font-normal">—</span>}
                         </td>
                         <td className="py-4 px-4 font-bold text-foreground">
                           {unit.status !== "occupied" ? unit.rent : <span className="text-muted-foreground font-normal">—</span>}
@@ -346,8 +418,12 @@ export default function App() {
                         {unit.status !== "occupied" && (
                           <div className="flex items-center justify-between mt-1.5">
                             <div>
-                              <span className="font-bold text-foreground text-sm">{unit.rent}/mo</span>
-                              {unit.type !== "Shop" && <span className="text-xs text-muted-foreground ml-1">+ Elec. & Water</span>}
+                              <div className="font-bold text-foreground text-sm">
+                                {unit.type === "2BHK" ? "₹60k Deposit" : unit.type === "1BHK" ? "₹30k Deposit" : ""}
+                              </div>
+                              <div className="text-xs text-foreground mt-0.5">
+                                <span className="font-semibold">{unit.rent}</span><span className="text-muted-foreground">/mo {unit.type !== "Shop" && "+ Bills"}</span>
+                              </div>
                             </div>
                             <a href={`https://wa.me/919790377717?text=${encodeURIComponent(`Hi, I want to rent the ${unit.type} on ${floor.label} at Bharathi Residency. Is it available?`)}`}
                               target="_blank" rel="noreferrer"
@@ -362,6 +438,10 @@ export default function App() {
                 </div>
               </div>
             ))}
+          </div>
+
+          <div className="mt-4 text-xs text-muted-foreground font-medium px-2">
+            * Electricity is billed as per BESCOM. Water is metered at 15 paisa per liter.
           </div>
 
           <div className="mt-5 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-2xl p-4 text-sm text-amber-900">
@@ -384,41 +464,20 @@ export default function App() {
             <p className="text-muted-foreground mt-1.5 text-sm">Unit-specific photos available on request — WhatsApp the owners.</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-            <div className="col-span-2 rounded-2xl overflow-hidden bg-muted" style={{ aspectRatio: "16/9" }}>
-              <img
-                src="https://images.unsplash.com/photo-1764996915324-91919cee14d3?w=900&h=500&fit=crop&auto=format"
-                alt="Bharathi Residency apartments for rent — Electronic City Phase 2 Bengaluru"
-                className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-700"
-              />
-            </div>
-            <div className="rounded-2xl overflow-hidden bg-muted" style={{ aspectRatio: "4/3" }}>
-              <img
-                src="https://images.unsplash.com/photo-1771327811795-6197403af846?w=600&h=450&fit=crop&auto=format"
-                alt="1BHK flat for rent — semi-furnished bedroom with modern fittings"
-                className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-700"
-              />
-            </div>
-            <div className="rounded-2xl overflow-hidden bg-muted" style={{ aspectRatio: "4/3" }}>
-              <img
-                src="https://images.unsplash.com/photo-1714983007778-b370188238b8?w=600&h=450&fit=crop&auto=format"
-                alt="Building entrance with lift — Bharathi Residency"
-                className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-700"
-              />
-            </div>
-            <div className="rounded-2xl overflow-hidden bg-muted" style={{ aspectRatio: "4/3" }}>
-              <img
-                src="https://images.unsplash.com/photo-1779976955617-23056bd0f82e?w=600&h=450&fit=crop&auto=format"
-                alt="Apartment exterior — residential building for rent Electronic City"
-                className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-700"
-              />
-            </div>
-            <div className="rounded-2xl overflow-hidden bg-muted" style={{ aspectRatio: "4/3" }}>
-              <img
-                src="https://images.unsplash.com/photo-1632400990400-416d5460f337?w=600&h=450&fit=crop&auto=format"
-                alt="Building front with parking — Bharathi Residency Electronic City Phase 2"
-                className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-700"
-              />
-            </div>
+            {galleryImages.map((img, i) => (
+              <div 
+                key={i}
+                className={`${i === 0 ? "col-span-2 " : ""}rounded-2xl overflow-hidden bg-muted cursor-pointer`}
+                style={{ aspectRatio: i === 0 ? "16/9" : "4/3" }}
+                onClick={() => setLightboxIndex(i)}
+              >
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-700"
+                />
+              </div>
+            ))}
           </div>
           <p className="text-center text-sm text-muted-foreground mt-4">
             More photos of kitchen, bathroom & common areas —{" "}
@@ -443,8 +502,7 @@ export default function App() {
             {[
               { label: "Monthly Rent — 1BHK", value: "₹12,000 / mo", note: "Payable on or before the 10th of every month" },
               { label: "Monthly Rent — 2BHK", value: "₹20,000 / mo", note: "Payable on or before the 10th of every month" },
-              { label: "Electricity & Water", value: "Tenant's account", note: "Billed directly by BESCOM / BWSSB to tenant" },
-              { label: "Security Deposit", value: "₹ —", note: "Cash, interest-free, fully refundable on vacating" },
+              { label: "Electricity & Water", value: "Tenant's account", note: "Electricity as per BESCOM. Water is charged at 15 paisa per liter." },
               { label: "Rental Period", value: "11 months", note: "Renewable by mutual consent" },
               { label: "Rent on Renewal", value: "+5% per cycle", note: "Standard enhancement at each renewal" },
               { label: "Notice Period", value: "1 month", note: "Either party must give 1 month's advance notice" },
@@ -662,9 +720,13 @@ export default function App() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="bg-foreground text-background/50 py-5 px-4">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
-          <p>© {new Date().getFullYear()} Bharathi Residency · Electronic City Phase 2 · Bengaluru — Direct Owner Rental · No Brokerage</p>
+      <footer className="bg-foreground text-background/50 py-8 px-4 mb-[4.5rem] md:mb-0">
+        <div className="max-w-6xl mx-auto flex flex-col items-center gap-3 text-xs">
+          <div className="flex items-center gap-2 mb-1">
+            <img src="/image.png" alt="Bharathi Residency Logo" className="w-8 h-8 object-contain bg-white rounded-full p-1 opacity-90" />
+            <span className="font-display font-bold text-base text-background/70 tracking-wide">Bharathi Residency</span>
+          </div>
+          <p className="text-center">© {new Date().getFullYear()} Bharathi Residency · Electronic City Phase 2 · Bengaluru <br className="sm:hidden" /> — Direct Owner Rental · No Brokerage</p>
           <p className="text-background/40">
             Made with ❤️ by Akshay ·{" "}
             <a href="tel:+919994400311" className="hover:text-background/70 transition-colors">9994400311</a>
@@ -694,17 +756,20 @@ export default function App() {
 
       {/* ── ENQUIRY POPUP ── */}
       {popupOpen && (
-        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden">
-            <div className="bg-primary px-6 py-5 relative">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-y-auto max-h-[95vh]">
+            <div className="bg-primary px-6 py-6 relative">
               <button onClick={closePopup} className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors p-1">
                 <X size={18} />
               </button>
-              <p className="text-white/60 text-xs font-bold uppercase tracking-wider mb-2">Bharathi Residency · Electronic City Phase 2</p>
+              <div className="flex items-center gap-3 mb-4">
+                <img src="/image.png" alt="Logo" className="w-10 h-10 object-contain bg-white rounded-full p-1 shadow-sm" />
+                <p className="text-white/90 text-xs font-bold uppercase tracking-wider leading-snug">Bharathi Residency <br/><span className="font-normal text-white/70">Electronic City Phase 2</span></p>
+              </div>
               <h3 className="font-display text-xl font-bold text-white leading-snug">
                 Looking for a flat for rent nearby?
               </h3>
-              <p className="text-white/70 text-sm mt-1">Tell us what you need — we&apos;ll call you back today.</p>
+              <p className="text-white/80 text-sm mt-1.5">Tell us what you need — we&apos;ll call you back today.</p>
             </div>
             {submitted ? (
               <div className="px-6 py-10 text-center">
@@ -744,6 +809,49 @@ export default function App() {
                 </button>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ── LIGHTBOX ── */}
+      {lightboxIndex !== null && (
+        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4" onClick={() => setLightboxIndex(null)}>
+          <button 
+            onClick={() => setLightboxIndex(null)}
+            className="absolute top-4 right-4 text-white/70 hover:text-white bg-white/10 p-2 rounded-full backdrop-blur-md"
+          >
+            <X size={24} />
+          </button>
+          
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightboxIndex((prev) => prev! === 0 ? galleryImages.length - 1 : prev! - 1);
+            }}
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white bg-white/10 p-2 rounded-full backdrop-blur-md"
+          >
+            <ChevronLeft size={32} />
+          </button>
+          
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightboxIndex((prev) => prev! === galleryImages.length - 1 ? 0 : prev! + 1);
+            }}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white bg-white/10 p-2 rounded-full backdrop-blur-md"
+          >
+            <ChevronRight size={32} />
+          </button>
+          
+          <div className="flex flex-col items-center max-w-5xl w-full" onClick={(e) => e.stopPropagation()}>
+            <img 
+              src={galleryImages[lightboxIndex].src} 
+              alt={galleryImages[lightboxIndex].alt}
+              className="max-h-[85vh] object-contain rounded-lg shadow-2xl"
+            />
+            <p className="text-white/80 mt-4 text-center font-medium text-lg">
+              {galleryImages[lightboxIndex].alt.split('—')[0]}
+            </p>
           </div>
         </div>
       )}
