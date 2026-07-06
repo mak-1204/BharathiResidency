@@ -224,7 +224,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground" style={{ fontFamily: '"DM Sans", system-ui, sans-serif' }}>
+    <div className="w-full bg-background text-foreground" style={{ fontFamily: '"DM Sans", system-ui, sans-serif' }}>
 
       {/* ── NAV ── */}
       <nav className={`fixed top-0 inset-x-0 z-50 pt-2 transition-colors duration-300 ${menuOpen ? "bg-white/60 backdrop-blur-2xl shadow-lg border-b border-white/20" : ""}`}>
@@ -536,7 +536,14 @@ export default function App() {
             <div className="bg-secondary border border-primary/10 rounded-2xl p-5">
               <h3 className="font-bold mb-3 text-primary text-sm uppercase tracking-wider">What&apos;s Provided</h3>
               <ul className="space-y-2 text-sm">
-                {["Fans (count confirmed at viewing)", "Geyser (per unit)", "Ceiling light points throughout", "Electricity + water connection", "Hall, kitchen, bedroom(s), bathroom"].map((d) => (
+                {[
+                  "Fans (count confirmed at viewing)",
+                  "Geyser (1 for 1BHK, 2 for 2BHK)",
+                  "Ceiling light points throughout",
+                  "Electricity + water connection",
+                  "Bedrooms & Bathrooms (2BHK: 2 Bed, 2 Bath | 1BHK: 1 Bed, 1 Bath)",
+                  "Balcony (available in 2BHK)"
+                ].map((d) => (
                   <li key={d} className="flex items-start gap-2">
                     <span className="text-primary font-bold mt-0.5 shrink-0">✓</span> {d}
                   </li>
